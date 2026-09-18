@@ -16,6 +16,7 @@ from app.core.config import settings
 from app.db.session import close_db
 from app.core.logging import setup_logging
 from app.core.middleware import RequestIDMiddleware
+from app.db.memory_pool import close_memory_pool, init_memory_pool
 from app.admin import setup_admin
 
 logger = logging.getLogger(__name__)
@@ -28,7 +29,12 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     Resources yielded here are available via request.state in route handlers.
     See: https://asgi.readthedocs.io/en/latest/specs/lifespan.html#lifespan-state
     """
+
+    if settings.ENABLE_MEMORY:
+        await init_memory_pool()
     yield
+    if settings.ENABLE_MEMORY:
+        await close_memory_pool()
 
     await close_db()
 
