@@ -7,3 +7,4 @@ export { useConversations } from "./use-conversations";
 export { useConversationShares } from "./use-conversation-shares";
 export { useAdminConversations } from "./use-admin-conversations";
 export { useSlashCommands, isBuiltinEnabled, BUILTIN_COMMAND_LIST } from "./use-slash-commands";
+export { useMemoryFiles } from "./use-memory";
