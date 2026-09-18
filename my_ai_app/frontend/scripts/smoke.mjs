@@ -40,6 +40,21 @@ try {
   assert.equal((await request(`/conversations/${conversation.id}`, { headers })).status, 200);
   assert.equal((await request(`/conversations/${conversation.id}`, { method: "DELETE", headers })).status, 204);
 
+  const memoryPath = "/me/memory/file?path=preferences.md";
+  const note = await request(memoryPath, { method: "PUT", headers, body: JSON.stringify({ content: "Prefer concise answers", version: null }) });
+  assert.equal(note.status, 200, "Memory must persist in PostgreSQL");
+  const initial = await note.json();
+  const otherLogin = await request("/auth/login", { method: "POST", body: new URLSearchParams({ username: emails[0], password }) });
+  const otherHeaders = { Authorization: `Bearer ${(await otherLogin.json()).access_token}`, "Content-Type": "application/json" };
+  assert.equal((await request(memoryPath, { headers: otherHeaders })).status, 404, "Other users cannot read this memory");
+  assert.equal((await request(`${memoryPath}&version=${initial.version}`, { method: "DELETE", headers: otherHeaders })).status, 404, "Other users cannot delete this memory");
+  const updated = await request(memoryPath, { method: "PUT", headers, body: JSON.stringify({ content: "Prefer short answers", version: initial.version }) });
+  assert.equal(updated.status, 200);
+  const latest = await updated.json();
+  assert.equal((await request(memoryPath, { method: "PUT", headers, body: JSON.stringify({ content: "Stale edit", version: initial.version }) })).status, 409);
+  assert.equal((await (await request(memoryPath, { headers })).json()).content, "Prefer short answers");
+  assert.equal((await request(`${memoryPath}&version=${latest.version}`, { method: "DELETE", headers })).status, 204);
+
   browser = await chromium.launch();
   const page = await browser.newPage();
   const errors = [];
@@ -56,8 +71,21 @@ try {
   await page.waitForLoadState("networkidle", { timeout: 60000 });
   assert(!page.url().includes("/login"), "Session must persist across navigation");
   await page.locator("main").waitFor({ state: "visible", timeout: 60000 });
+  await page.goto(`${origin}/settings/memory`);
+  await page.getByRole("button", { name: "New file" }).click();
+  await page.getByLabel("File name").fill("browser-note");
+  await page.getByLabel("Content", { exact: true }).fill("Remember this browser note");
+  await page.getByRole("button", { name: "Create", exact: true }).click();
+  await page.getByRole("button", { name: "Edit browser-note.md", exact: true }).waitFor();
+  await page.reload();
+  await page.getByRole("button", { name: "Edit browser-note.md", exact: true }).click();
+  assert.equal(await page.getByLabel("Content", { exact: true }).inputValue(), "Remember this browser note");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page.getByRole("button", { name: "Delete browser-note.md", exact: true }).click();
+  await page.getByRole("alertdialog").getByRole("button", { name: "Delete", exact: true }).click();
+  await page.getByRole("button", { name: "Edit browser-note.md", exact: true }).waitFor({ state: "hidden" });
   assert.deepEqual(errors, [], "No uncaught browser errors");
-  console.log("PASS: database, registration, authorization, saved conversations, branding, browser login and dashboard.");
+  console.log("PASS: database, registration, authorization, saved conversations, branding, browser login, dashboard, memory CRUD, isolation and stale-edit protection.");
   console.log(`AI provider: ${ready.checks.llm.status} (no paid model request performed).`);
 } finally {
   if (browser) await browser.close();
@@ -73,6 +101,7 @@ assert len(emails) == 2 and all(e.startswith('smoke-') and e.endswith('@example.
 conn = psycopg2.connect(host=values['POSTGRES_HOST'], port=values['POSTGRES_PORT'], user=values['POSTGRES_USER'], password=values['POSTGRES_PASSWORD'], dbname=values['POSTGRES_DB'])
 with conn:
     with conn.cursor() as cursor:
+        cursor.execute("DELETE FROM agent_memory WHERE split_part(path, '/', 1) IN (SELECT 'user-' || id::text FROM users WHERE email = ANY(%s))", (emails,))
         cursor.execute('DELETE FROM users WHERE email = ANY(%s)', (emails,))
 conn.close()
 `, ...emails], { cwd: backend, stdio: ["ignore", "pipe", "pipe"] });
