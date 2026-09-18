@@ -8,6 +8,7 @@ from app.api.routes.v1 import admin_users, auth, users
 from app.api.routes.v1 import admin_ratings
 from app.api.routes.v1 import conversations, public_demos
 from app.api.routes.v1 import admin_conversations
+from app.api.routes.v1 import me_memory
 from app.api.routes.v1 import agent
 from app.api.routes.v1 import files
 from app.api.routes.v1 import me_slash_commands
@@ -25,13 +26,13 @@ v1_router.include_router(admin_ratings.router, prefix="/admin/ratings", tags=["a
 v1_router.include_router(conversations.router, prefix="/conversations", tags=["conversations"])
 v1_router.include_router(public_demos.router, prefix="/demos", tags=["demos"])
 
+v1_router.include_router(me_memory.router, prefix="/me/memory", tags=["me:memory"])
+
 v1_router.include_router(agent.router, tags=["agent"])
 
 v1_router.include_router(files.router, tags=["files"])
 
-v1_router.include_router(
-    admin_conversations.router, prefix="/admin/conversations", tags=["admin-conversations"]
-)
+v1_router.include_router(admin_conversations.router, prefix="/admin/conversations", tags=["admin-conversations"])
 
 v1_router.include_router(admin_users.router, prefix="/admin/users", tags=["admin:users"])
 v1_router.include_router(
