@@ -92,16 +92,17 @@ async def readiness_probe(
             "type": "postgresql",
         }
 
-    # LLM provider — config-only check (avoid spending money on a probe call).
+    # LLM provider â€” config-only check (avoid spending money on a probe call).
     llm_provider = (getattr(settings, "LLM_PROVIDER", None) or "").lower()
     if llm_provider:
         key_field = {
             "openai": "OPENAI_API_KEY",
+            "orcarouter": "ORCAROUTER_API_KEY",
             "anthropic": "ANTHROPIC_API_KEY",
             "google": "GOOGLE_API_KEY",
             "openrouter": "OPENROUTER_API_KEY",
         }.get(llm_provider)
-        api_key = getattr(settings, key_field, None) if key_field else None
+        api_key = (getattr(settings, key_field, "") or "").strip() if key_field else ""
         checks["llm"] = {
             "status": "healthy" if api_key else "unhealthy",
             "provider": llm_provider,
@@ -110,7 +111,7 @@ async def readiness_probe(
     else:
         checks["llm"] = {"status": "unknown", "detail": "not configured"}
 
-    # Determine overall health — only db + redis are critical for readiness.
+    # Determine overall health â€” only db + redis are critical for readiness.
     critical = {k: v for k, v in checks.items() if k in ("database", "redis")}
     all_healthy = (
         all(check.get("status") == "healthy" for check in critical.values()) if critical else True
