@@ -8,6 +8,7 @@ from sqlalchemy import engine_from_config, pool
 
 from app.core.config import settings
 from app.db.base import Base
+from app.db.migration_filters import include_migration_object
 
 # Import all models here to ensure they are registered with metadata
 from app.db.models.user import User  # noqa: F401
@@ -36,6 +37,7 @@ def run_migrations_offline() -> None:
     context.configure(
         url=url,
         target_metadata=target_metadata,
+        include_object=include_migration_object,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
@@ -59,6 +61,7 @@ def run_migrations_online() -> None:
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
+            include_object=include_migration_object,
         )
 
         with context.begin_transaction():
