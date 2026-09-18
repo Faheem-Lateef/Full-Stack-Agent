@@ -4,7 +4,7 @@
 from pathlib import Path
 from typing import Literal
 
-from pydantic import computed_field, field_validator, ValidationInfo
+from pydantic import computed_field, field_validator, model_validator, ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import URL
 
@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     )
 
     PROJECT_NAME: str = "AgentHarbor"
+    ENABLE_MEMORY: bool = False
     API_V1_STR: str = "/api/v1"
     DEBUG: bool = False
     DB_ECHO: bool = (
@@ -39,7 +40,7 @@ class Settings(BaseSettings):
     MODELS_CACHE_DIR: Path = Path("./models_cache")
     MEDIA_DIR: Path = Path("./media")
     MAX_UPLOAD_SIZE_MB: int = 50  # Max file upload size in MB
-    # Soft per-org storage cap surfaced on /billing — not enforced yet (5 GB).
+    # Soft per-org storage cap surfaced on /billing â€” not enforced yet (5 GB).
     STORAGE_SOFT_LIMIT_BYTES: int = 5 * 1024 * 1024 * 1024
 
     POSTGRES_HOST: str = "localhost"
@@ -120,6 +121,8 @@ class Settings(BaseSettings):
         return v
 
     OPENAI_API_KEY: str = ""
+    ORCAROUTER_API_KEY: str = ""
+    LLM_PROVIDER: Literal["openai", "orcarouter"] = "openai"
     AI_MODEL: str = "gpt-5.5"
     AI_TEMPERATURE: float = 0.7
     AI_THINKING_ENABLED: bool = False
@@ -137,7 +140,23 @@ class Settings(BaseSettings):
         "gpt-4.1",
     ]
     AI_FRAMEWORK: str = "pydantic_ai"
-    LLM_PROVIDER: str = "openai"
+
+    @model_validator(mode="after")
+    def provider_model_defaults(self) -> "Settings":
+        """Use provider-specific defaults while honoring explicit model settings."""
+        if self.LLM_PROVIDER == "orcarouter":
+            if "AI_MODEL" not in self.model_fields_set:
+                self.AI_MODEL = "anthropic/claude-sonnet-4.6"
+            if "AI_AVAILABLE_MODELS" not in self.model_fields_set:
+                self.AI_AVAILABLE_MODELS = [
+                    "anthropic/claude-sonnet-4.6",
+                    "openai/gpt-5.5",
+                    "google/gemini-2.5-flash",
+                    "orcarouter/auto",
+                ]
+        if self.AI_MODEL not in self.AI_AVAILABLE_MODELS:
+            self.AI_AVAILABLE_MODELS = [self.AI_MODEL, *self.AI_AVAILABLE_MODELS]
+        return self
 
     CORS_ORIGINS: list[str] = [
         "http://localhost:3000",
