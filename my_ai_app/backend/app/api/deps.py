@@ -304,3 +304,17 @@ def get_admin_service(db: DBSession) -> AdminService:
 
 
 AdminSvc = Annotated[AdminService, Depends(get_admin_service)]
+from app.db.memory_pool import get_memory_store
+from app.services.user_memory import UserMemoryService
+
+
+async def get_user_memory_service() -> UserMemoryService:
+    """Service over the process-wide memory store — no DB session involved."""
+    if not settings.ENABLE_MEMORY:
+        from app.core.exceptions import ExternalServiceError
+
+        raise ExternalServiceError(message="Agent memory is disabled", code="MEMORY_DISABLED")
+    return UserMemoryService(await get_memory_store())
+
+
+UserMemorySvc = Annotated[UserMemoryService, Depends(get_user_memory_service)]
