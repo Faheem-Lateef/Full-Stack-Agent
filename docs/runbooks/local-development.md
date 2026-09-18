@@ -30,7 +30,7 @@ Install dependencies first on a fresh checkout; see the root README. The `DEBUG`
 
 Open http://localhost:3000 and http://localhost:8000/docs. Check http://localhost:8000/api/v1/health/ready and inspect each dependency status; HTTP 200 does not guarantee an AI key is present. Register your own account before exposing this app publicly: the first registered account becomes administrator. Later public registrations must remain ordinary users.
 
-Run `npm.cmd run test:smoke` from the frontend after both servers start. This checks branding, login, dashboard and browser errors against a uniquely named temporary account. It uses an API login and removes its own account afterward. It does not call a paid model.
+Run `npm.cmd run test:smoke` from the frontend after both servers start with `ENABLE_MEMORY=true`. This checks branding, login, dashboard and browser errors against a uniquely named temporary account. It uses an API login and removes its own account afterward. It does not call a paid model.
 
 ## Database failures
 
@@ -47,3 +47,17 @@ Inspect the process owning the port before stopping it. Stop only this applicati
 ## Recovery and rollback
 
 For code regressions, revert the offending Git commit and run the quality checks before restarting. Before production migrations, take a PostgreSQL backup and verify restoration in a separate database. Review migration downgrade code before using it; a downgrade can discard data. Restore into a separate database and validate it before changing connection settings. Never overwrite the original database as an automatic repair.
+
+## Agent memory
+
+Apply migrations through `0028_agent_memory`, set `ENABLE_MEMORY=true` in backend `.env`, and restart the backend. Open http://localhost:3000/settings/memory after signing in. Create a note and reload to confirm persistence. `MEMORY.md` is injected into later agent runs; additional files are available through memory tools. AI replies still require a provider key.
+
+Memory connection failures time out after five seconds, and later requests retry after a ten-second cooldown. The UI retains unsaved drafts after failed saves. For a version conflict, copy the draft, cancel and reopen the latest file, then reconcile the changes. Do not force a stale overwrite.
+
+Set `ENABLE_MEMORY=false` and restart to disable memory without deleting notes. Back up `agent_memory`, `agent_memory_operations`, `agent_memory_metadata` and `agent_memory_versions` along with the application database. Downgrading revision 0028 deletes stored memory; prefer disabling the flag for operational rollback. The existing AI agent may have already sent notes to its configured model provider during a turn.
+
+## Switch AI provider
+
+See [OrcaRouter configuration](../decisions/0003-orcarouter-provider.md). Set `LLM_PROVIDER=orcarouter`, `ORCAROUTER_API_KEY` and a gateway `AI_MODEL` in backend `.env`. Restart the backend and reload the browser. Model choices are provided by the backend. Existing conversations and memory remain in PostgreSQL.
+
+If the key is missing, configure it rather than using another provider's key. A 401 indicates gateway authentication failure. A configured key in readiness does not prove it is valid. Check model access and Responses/streaming/tool support for model-specific failures. To roll back, restore `LLM_PROVIDER=openai` and a direct OpenAI model ID, then restart.
