@@ -20,6 +20,7 @@ from pydantic_ai.messages import (
 from pydantic_ai.models.openai import OpenAIResponsesModel
 from pydantic_ai.providers.openai import OpenAIProvider
 from pydantic_ai.settings import ModelSettings
+from pydantic_ai_harness.memory import Memory
 
 from app.agents.prompts import DEFAULT_SYSTEM_PROMPT
 from app.agents.tools.ask_user_tool import MAX_QUESTIONS, QuestionItem, format_answers
@@ -30,10 +31,20 @@ logger = logging.getLogger(__name__)
 
 
 def _build_model(model_name: str) -> OpenAIResponsesModel:
-    """OpenAI-only deployment."""
+    """Route using server configuration; model names never select credentials."""
+    if settings.LLM_PROVIDER == "orcarouter":
+        key = settings.ORCAROUTER_API_KEY
+        base_url = "https://api.orcarouter.ai/v1"
+        key_name = "ORCAROUTER_API_KEY"
+    else:
+        key = settings.OPENAI_API_KEY
+        base_url = "https://api.openai.com/v1"
+        key_name = "OPENAI_API_KEY"
+    if not key.strip():
+        raise ValueError(f"{key_name} is required for the selected AI provider")
     return OpenAIResponsesModel(
         model_name or settings.AI_MODEL,
-        provider=OpenAIProvider(api_key=settings.OPENAI_API_KEY),
+        provider=OpenAIProvider(api_key=key, base_url=base_url),
     )
 
 
@@ -57,11 +68,13 @@ class AssistantAgent:
         temperature: float | None = None,
         system_prompt: str | None = None,
         thinking_effort: str | None = None,
+        memory_capability: "Memory[Deps] | None" = None,
     ):
+        self.memory_capability = memory_capability
         self.model_name = model_name or settings.AI_MODEL
-        # ``temperature`` stays ``None`` when caller didn't set it — don't fall
+        # ``temperature`` stays ``None`` when caller didn't set it â€” don't fall
         # back to settings.AI_TEMPERATURE here. Reasoning/o-series models
-        # (gpt-5.5, o1, …) reject the parameter entirely, so we only forward
+        # (gpt-5.5, o1, â€¦) reject the parameter entirely, so we only forward
         # it to the model when explicitly requested.
         self.temperature = temperature
         self.thinking_effort = (
@@ -80,7 +93,7 @@ class AssistantAgent:
             capabilities.append(Thinking(effort=self.thinking_effort))  # ty: ignore[invalid-argument-type]
 
         # The unified ``Thinking()`` capability enables reasoning, but for the
-        # OpenAI Responses API it sets only the effort — not the *summary*
+        # OpenAI Responses API it sets only the effort â€” not the *summary*
         # field that controls whether the model streams reasoning summaries
         # back to the client. Without ``openai_reasoning_summary`` set, the
         # model reasons internally and we never see ThinkingPart events.
@@ -91,6 +104,8 @@ class AssistantAgent:
             model_settings["temperature"] = self.temperature
         if self.thinking_effort:
             model_settings["openai_reasoning_summary"] = "auto"  # type: ignore[typeddict-unknown-key]  # ty: ignore[invalid-key]
+        if self.memory_capability is not None:
+            capabilities.append(self.memory_capability)
 
         agent = Agent[Deps, str](
             model=model,
@@ -118,7 +133,7 @@ class AssistantAgent:
 
             Use this when a decision or missing detail would materially change what
             you do next and you can't reasonably assume it. You may pass several
-            questions at once — the user answers them one after another and you get
+            questions at once â€” the user answers them one after another and you get
             all the answers back together (good for an intake/setup flow). You can
             also call this again later to follow up on what they said. Prefer
             answering directly when the request is already clear.
@@ -209,11 +224,13 @@ def get_agent(
     model_name: str | None = None,
     thinking_effort: str | None = None,
     temperature: float | None = None,
+    memory_capability: "Memory[Deps] | None" = None,
 ) -> AssistantAgent:
     return AssistantAgent(
         model_name=model_name,
         thinking_effort=thinking_effort,
         temperature=temperature,
+        memory_capability=memory_capability,
     )
 
 
