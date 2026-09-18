@@ -1,0 +1,45 @@
+name: AgentHarbor checks
+
+on:
+  push:
+    branches: [main]
+    paths: ["my_ai_app/**", ".github/workflows/agentharbor.yml"]
+  pull_request:
+    paths: ["my_ai_app/**", ".github/workflows/agentharbor.yml"]
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my_ai_app/backend
+    env:
+      DEBUG: "true"
+      PROJECT_NAME: AgentHarbor
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - run: uv sync --locked --python 3.14
+      - run: uv run pytest -q
+      - run: uv run ruff check app tests alembic
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: my_ai_app/frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: my_ai_app/frontend/package-lock.json
+      - run: npm ci
+        env:
+          HUSKY: "0"
+      - run: npm run lint
+      - run: npm run test:run
+      - run: npm run build
