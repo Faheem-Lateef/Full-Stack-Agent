@@ -608,3 +608,7 @@ async def test_create_item():
 6. **Use transactions appropriately** - `flush()` in repos, `commit()` in deps
 7. **Separate schemas** - Create, Update, Response
 8. **Type everything** - Pydantic + Python type hints
+
+## AgentHarbor persistent memory
+
+The running app now has per-user PostgreSQL memory, an authenticated `/api/v1/me/memory` API, and a Settings > Memory editor. The harness store is the memory data adapter; `UserMemoryService` handles validation and version-conflict errors. Agent capabilities are scoped to the authenticated UUID before a turn. The migration is `0028_agent_memory`; library-owned tables must be preserved during ORM autogeneration. The generator source is unchanged.
