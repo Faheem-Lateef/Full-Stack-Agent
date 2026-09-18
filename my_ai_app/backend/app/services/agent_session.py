@@ -23,6 +23,7 @@ from pydantic_ai.messages import (
 )
 
 from app.agents.assistant import Deps, get_agent
+from app.agents.memory import build_memory_capability
 from app.api.deps import get_conversation_service
 from app.db.models.user import User
 from app.db.session import get_db_context
@@ -52,7 +53,7 @@ class AgentSession:
         self.websocket = websocket
         self.user = user
         self.conversation_history: list[dict[str, str]] = []
-        self.deps = Deps()
+        self.deps = Deps(user_id=str(user.id))
         self.deps.ask_user = self._ask_user
         self.current_conversation_id: str | None = None
         self._turn_task: asyncio.Task[None] | None = None
@@ -160,6 +161,7 @@ class AgentSession:
             assistant = get_agent(
                 model_name=data.get("model"),
                 thinking_effort=data.get("thinking_effort"),
+                memory_capability=await build_memory_capability(str(self.user.id)),
             )
             model_history = build_message_history(self.conversation_history)
             user_input = await self._build_multimodal_input(user_message, file_ids)
@@ -358,12 +360,12 @@ class AgentSession:
             elif isinstance(tool_event, FunctionToolResultEvent):
                 tc = pending.get(tool_event.tool_call_id)
                 if tc is not None:
-                    tc["result"] = str(tool_event.result.content)
+                    tc["result"] = str(tool_event.part.content)
                 await send_event(
                     self.websocket,
                     "tool_result",
                     {
                         "tool_call_id": tool_event.tool_call_id,
-                        "content": str(tool_event.result.content),
+                        "content": str(tool_event.part.content),
                     },
                 )
