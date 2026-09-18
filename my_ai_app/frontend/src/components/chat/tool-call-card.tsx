@@ -14,6 +14,7 @@ import {
   Loader2,
   CheckCircle2,
   XCircle,
+  NotebookPen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toolCaption, toolDisplayName } from "@/lib/agent-step-captions";
@@ -21,6 +22,7 @@ import { DateTimeResult } from "./tool-results/datetime";
 import { RAGSearchResults } from "./tool-results/rag";
 import { WebSearchResults, parseWebSearch } from "./tool-results/web-search";
 import { AskUserResult } from "./tool-results/ask-user";
+import { MemoryToolResult, isMemoryTool } from "./tool-results/memory";
 import { GenericToolResult, RawToolView } from "./tool-results/generic";
 
 interface ToolCallCardProps {
@@ -39,6 +41,7 @@ export function ToolCallCard({ toolCall, defaultExpanded = false }: ToolCallCard
       false,
   );
   const [showRaw, setShowRaw] = useState(false);
+  const isMemory = isMemoryTool(toolCall.name);
 
   // Short input hint shown in the collapsed bar — the query for search
   // tools, the URL for fetch_url, etc. (any tool with a url/query arg).
@@ -69,7 +72,7 @@ export function ToolCallCard({ toolCall, defaultExpanded = false }: ToolCallCard
   const isAskUser = toolCall.name === "ask_user";
 
   const hasSpecialRenderer =
-    isDateTime || isRAGSearch || isWebSearch || isAskUser;
+    isDateTime || isRAGSearch || isWebSearch || isAskUser || isMemory;
   const friendlyName = isDateTime
     ? "Current Date & Time"
     : isRAGSearch
@@ -90,6 +93,8 @@ export function ToolCallCard({ toolCall, defaultExpanded = false }: ToolCallCard
         ? Globe
           : isAskUser
             ? MessageCircleQuestion
+            : isMemory
+              ? NotebookPen
             : Wrench;
 
   const toggleExpanded = () => {
@@ -155,8 +160,10 @@ export function ToolCallCard({ toolCall, defaultExpanded = false }: ToolCallCard
           ) : (
             <span className="truncate text-sm font-medium">{friendlyName}</span>
           )}
+          {/* pr-0.5 gives italic glyph overhang room — `truncate` clips it otherwise
+              (a trailing "d" loses its edge and reads as "a"). */}
           {inputHint && !isRunning ? (
-            <span className="text-muted-foreground min-w-0 flex-1 truncate text-xs italic">
+            <span className="text-muted-foreground min-w-0 flex-1 truncate pr-0.5 text-xs italic">
               {inputHint}
             </span>
           ) : null}
@@ -211,6 +218,8 @@ export function ToolCallCard({ toolCall, defaultExpanded = false }: ToolCallCard
             <WebSearchResults data={webResults} />
           ) : isAskUser ? (
             <AskUserResult args={toolCall.args} resultText={resultText} />
+          ) : isMemory ? (
+            <MemoryToolResult toolCall={toolCall} resultText={resultText} />
           ) : (
             <GenericToolResult toolCall={toolCall} resultText={resultText} />
           )}
