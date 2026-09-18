@@ -53,6 +53,9 @@ export const qk = {
   slashCommands: {
     list: () => ["slash-commands", "list"] as const,
   },
+  memory: {
+    list: (userId: string | undefined) => ["memory", userId, "list"] as const,
+  },
   admin: {
     stats: () => ["admin", "stats"] as const,
     events: () => ["admin", "events"] as const,
