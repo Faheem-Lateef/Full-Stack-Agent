@@ -1,4 +1,4 @@
-﻿# AgentHarbor | Full-Stack-Agent
+Ã¯Â»Â¿# AgentHarbor | Full-Stack-Agent
 
 AgentHarbor is your workspace for AI conversations and everyday work. This repository includes the runnable app and the generator it was built from.
 
@@ -298,3 +298,13 @@ Created by **Vstorm**. Distributed under the [MIT License](LICENSE).
 - [Architecture decisions](docs/decisions/README.md)
 - [Quality checks](docs/quality.md)
 - [Startup and recovery](docs/runbooks/local-development.md)
+
+## Persistent memory
+
+AgentHarbor now supports private notes that survive across conversations. Visit **Settings > Memory** to view, create, edit or delete them. This local instance has `ENABLE_MEMORY=true`; other installations opt in through backend `.env` after running migrations. The agent can read, search, write and delete its authenticated user's notes, with visible tool cards in chat. An AI key is required for agent-driven memory, but the settings editor works without one.
+
+See [the memory decision record](docs/decisions/0002-per-user-memory.md) for the upstream PR, scope, limitations and operational details.
+
+## Optional OrcaRouter provider
+
+AgentHarbor can use OrcaRouter for model access through a single gateway. Configure `LLM_PROVIDER=orcarouter`, `ORCAROUTER_API_KEY` and `AI_MODEL` in backend `.env`, then restart the backend. OpenAI remains the local default. See [provider setup and verification](docs/decisions/0003-orcarouter-provider.md).
