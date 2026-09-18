@@ -190,3 +190,11 @@ and `parsed_content` (extracted text). Only the file owner can access their file
 ### Size Limits
 
 Maximum upload size is controlled by `MAX_UPLOAD_SIZE_MB` (default 50MB).
+
+## AgentHarbor persistent memory
+
+The running app now has per-user PostgreSQL memory, an authenticated `/api/v1/me/memory` API, and a Settings > Memory editor. The harness store is the memory data adapter; `UserMemoryService` handles validation and version-conflict errors. Agent capabilities are scoped to the authenticated UUID before a turn. The migration is `0028_agent_memory`; library-owned tables must be preserved during ORM autogeneration. The generator source is unchanged.
+
+## AI provider routing
+
+The assistant model factory selects a fixed OpenAI or OrcaRouter endpoint from backend configuration. Each provider has its own server-side key; a model ID cannot switch credentials or endpoints. Both use the existing Responses transport and the same authenticated per-user memory capability.
