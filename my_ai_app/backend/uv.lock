@@ -1131,6 +1131,7 @@ dependencies = [
     { name = "itsdangerous" },
     { name = "psycopg2-binary" },
     { name = "pydantic", extra = ["email"] },
+    { name = "pydantic-ai-harness" },
     { name = "pydantic-ai-slim", extra = ["duckduckgo", "openai", "web-fetch"] },
     { name = "pydantic-settings" },
     { name = "pyjwt" },
@@ -1165,6 +1166,7 @@ requires-dist = [
     { name = "itsdangerous", specifier = ">=2.2.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.0" },
     { name = "pydantic", extras = ["email"], specifier = ">=2.12.0" },
+    { name = "pydantic-ai-harness", specifier = "==0.12.0" },
     { name = "pydantic-ai-slim", extras = ["openai", "duckduckgo", "web-fetch"], specifier = ">=1.80.0" },
     { name = "pydantic-settings", specifier = ">=2.14.2" },
     { name = "pyjwt", specifier = ">=2.9.0" },
@@ -1398,6 +1400,19 @@ wheels = [
 [package.optional-dependencies]
 email = [
     { name = "email-validator" },
+]
+
+[[package]]
+name = "pydantic-ai-harness"
+version = "0.12.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpx" },
+    { name = "pydantic-ai-slim" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/fa/05/0c5a352342563412b5205b0f5f4cbb0f6e126179092dad3c376f4c174c01/pydantic_ai_harness-0.12.0.tar.gz", hash = "sha256:67baf74c351706f4d017ca0f97b21ca90daba9461f25c20a1ba315acb9325bd5", size = 1291217, upload-time = "2026-07-28T03:40:59.02Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/26/ed/17bdd203144420507092bd45250dfd3167bd59459a353d10529312976249/pydantic_ai_harness-0.12.0-py3-none-any.whl", hash = "sha256:2fc0bfc24d846f0ce2414e0230957aedebbdadd1570c5db7bbf72e8a8d639653", size = 411501, upload-time = "2026-07-28T03:40:57.429Z" },
 ]
 
 [[package]]
