@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { ArrowUpRight, Database, MessageSquare, Sparkles, Star, Wrench } from "lucide-react";
 import type { ReactNode } from "react";
 
