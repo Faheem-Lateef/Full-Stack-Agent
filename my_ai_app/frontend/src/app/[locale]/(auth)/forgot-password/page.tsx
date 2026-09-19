@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { ForgotPasswordForm } from "@/components/auth";
+import { ForgotPasswordForm } from "@/components/auth/forgot-password-form";
 import type { Locale } from "@/i18n";
 import { pageMetadata } from "@/lib/seo";
 
