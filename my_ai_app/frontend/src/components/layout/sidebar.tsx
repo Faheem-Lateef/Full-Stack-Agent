@@ -17,6 +17,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from "@/comp
 const navigation = [
   { nameKey: "dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
   { nameKey: "chat", href: ROUTES.CHAT, icon: MessageSquare },
+  { nameKey: "support", href: "/support", icon: MessageSquare },
   { nameKey: "profile", href: ROUTES.PROFILE, icon: UserCircle },
 ];
 
