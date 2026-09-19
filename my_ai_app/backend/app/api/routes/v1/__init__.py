@@ -39,3 +39,6 @@ v1_router.include_router(
     me_slash_commands.router, prefix="/me/slash-commands", tags=["me:slash-commands"]
 )
 v1_router.include_router(admin_stats.router, prefix="/admin", tags=["admin:stats"])
+
+from app.api.routes.v1 import support
+v1_router.include_router(support.router, prefix="/workspaces", tags=["support"])
