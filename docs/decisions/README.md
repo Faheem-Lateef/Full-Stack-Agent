@@ -7,3 +7,5 @@ Record substantial architecture changes here before or with their implementation
 - [0002: Persistent per-user memory](0002-per-user-memory.md)
 
 - [0003: Optional OrcaRouter provider](0003-orcarouter-provider.md)
+
+- [0004: Native customer-support pilot](0004-support-pilot.md)
