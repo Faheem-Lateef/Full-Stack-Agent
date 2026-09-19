@@ -68,7 +68,8 @@ try {
   await page.getByRole("button", { name: /sign in|log in|login/i }).click();
   await page.waitForURL(/chat|dashboard|onboarding/, { timeout: 60000 });
   await page.goto(`${origin}/dashboard`);
-  await page.waitForLoadState("networkidle", { timeout: 60000 });
+  // Check the authenticated UI; background requests need not become idle.
+  await page.getByRole("heading", { name: /^Good (morning|afternoon|evening), Smoke$/ }).waitFor({ state: "visible", timeout: 60000 });
   assert(!page.url().includes("/login"), "Session must persist across navigation");
   await page.locator("main").waitFor({ state: "visible", timeout: 60000 });
   await page.goto(`${origin}/settings/memory`);
