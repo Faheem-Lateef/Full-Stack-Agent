@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
