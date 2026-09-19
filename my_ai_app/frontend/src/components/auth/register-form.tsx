@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { ArrowRight, Check, X } from "lucide-react";
 
 import { OAuthBlock } from "@/components/auth/oauth-buttons";
-import { Button, Input, Label } from "@/components/ui";
-import { useAuth } from "@/hooks";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/hooks/use-auth";
 import { ApiError } from "@/lib/api-client";
 import { ROUTES } from "@/lib/constants";
 import { EMAIL_RE, getPasswordStrength } from "@/lib/utils";
