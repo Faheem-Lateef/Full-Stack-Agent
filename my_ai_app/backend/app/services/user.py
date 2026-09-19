@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi_pagination import Page
 from fastapi_pagination.ext.sqlalchemy import paginate
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import AlreadyExistsError, AuthenticationError, NotFoundError
@@ -166,7 +167,12 @@ class UserService:
         return str(full_path) if full_path is not None else None
 
     async def delete(self, user_id: UUID) -> User:
-        user = await user_repo.delete(self.db, user_id)
+        try:
+            user = await user_repo.delete(self.db, user_id)
+        except IntegrityError as exc:
+            if "support_memberships_user_id_fkey" in str(exc.orig):
+                raise AlreadyExistsError("Leave your support workspaces first; transfer ownership before leaving the last owner role.") from exc
+            raise
         if not user:
             raise NotFoundError(
                 message="User not found",
