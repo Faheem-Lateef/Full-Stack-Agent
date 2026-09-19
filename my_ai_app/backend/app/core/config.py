@@ -120,6 +120,10 @@ class Settings(BaseSettings):
             )
         return v
 
+    SUPPORT_ENABLED: bool = False
+    SUPPORT_EMBEDDINGS_ENABLED: bool = False
+    SUPPORT_EMBEDDING_MODEL: str = "text-embedding-3-small"
+
     OPENAI_API_KEY: str = ""
     ORCAROUTER_API_KEY: str = ""
     LLM_PROVIDER: Literal["openai", "orcarouter"] = "openai"
