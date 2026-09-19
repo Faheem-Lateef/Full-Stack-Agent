@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { RegisterForm } from "@/components/auth";
+import { RegisterForm } from "@/components/auth/register-form";
 import type { Locale } from "@/i18n";
 import { pageMetadata } from "@/lib/seo";
 
