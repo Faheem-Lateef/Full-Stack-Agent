@@ -50,6 +50,7 @@ type NavEntry =
 const NAV: NavEntry[] = [
   { kind: "link", labelKey: "dashboard", href: ROUTES.DASHBOARD, icon: LayoutDashboard },
   { kind: "link", labelKey: "chat", href: ROUTES.CHAT, icon: MessageSquare },
+  { kind: "link", labelKey: "support", href: "/support", icon: MessageSquare },
   {
     kind: "menu",
     labelKey: "admin",
