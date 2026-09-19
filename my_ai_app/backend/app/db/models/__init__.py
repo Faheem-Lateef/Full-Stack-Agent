@@ -18,3 +18,5 @@ __all__ = [
     "ConversationShare",
     "UserSlashCommand",
 ]
+
+from app.db.models import support as support  # Register support tables.
