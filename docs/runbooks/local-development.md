@@ -1,5 +1,7 @@
 # Local startup and recovery
 
+For company workspaces, document indexing and support replies, also start the separate worker described in [the support pilot runbook](support-pilot.md).
+
 ## Configuration
 
 The application is in `my_ai_app/`. Backend configuration lives in `my_ai_app/backend/.env`; frontend configuration lives in `my_ai_app/frontend/.env.local`. Copy the corresponding example on a new checkout, then fill in real values locally. Never commit these files.
@@ -41,6 +43,19 @@ Check that the PostgreSQL Windows service is running and port 5432 is available.
 Add `OPENAI_API_KEY` and select an `AI_MODEL` available to that account in backend `.env`, then restart the backend. Provider secrets must never use a `NEXT_PUBLIC_` prefix. Authentication, quota and model-access failures need provider configuration; fake responses are not a fix.
 
 ## Port conflicts or frontend build failures
+
+### Slow first navigation
+
+The development server compiles routes on demand, so the first visit can take seconds. Signup and login links show a spinner while navigation is pending; route loading screens cover page fetches. Clicking once is enough. The mobile menu fills the remaining viewport, scrolls independently, and stays above the cookie banner while open so its signup link remains reachable. For representative local performance, stop the frontend development server, then run from `my_ai_app/frontend`:
+
+```powershell
+npm.cmd run build
+npm.cmd run start -- --hostname localhost
+```
+
+Keep the backend running. Production mode requires another build after code changes. Use `npm.cmd run dev -- --hostname localhost` when editing code.
+
+Run `node scripts/navigation-smoke.mjs` from the frontend to check desktop/mobile signup with a delayed route response and print local navigation/HTTP timings. This check does not create accounts. Use the full `test:smoke` check for authentication and memory persistence. Compare cold and warmed timings separately; check HTTP status codes before attributing delays to rate limits.
 
 Inspect the process owning the port before stopping it. Stop only this application's process. Do not run `next dev` and `next build` against the same `.next` directory at once. Review `server-error.log` and `dev-server-error.log` when using background servers. Logs may contain user data and stay ignored by Git.
 
