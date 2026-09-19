@@ -49,3 +49,5 @@ Do not call a release production-ready solely because unit tests pass. Before de
 At completion, report changed behavior, commands run and outcomes, and checks that could not run. Automated checks enforce only what they cover; these documents do not create a background monitoring service.
 
 GitHub runs the AgentHarbor backend and frontend checks through `.github/workflows/agentharbor.yml` on app changes. Local browser smoke checks require running servers and a development database; this workflow does not run provider calls or that local smoke test.
+
+For support changes, run the rollback-only PostgreSQL integration cases with `RUN_SUPPORT_DB_TESTS=1` after migrations, plus `node scripts/support-smoke.mjs` from the frontend against a running API and worker. See the [support runbook](runbooks/support-pilot.md) for fixtures, cleanup and the no-paid-call evaluation command. Unit tests and a seeded browser draft do not establish live model accuracy; the held-out human-reviewed release gates remain separate.
