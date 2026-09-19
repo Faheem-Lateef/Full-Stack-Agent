@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -117,6 +117,7 @@ export function PillNav({ brand, links, ctaLabel, ctaHref, secondaryCta }: PillN
       ref={headerRef}
       className={cn(
         "theme-dark fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300",
+        open && "z-[60]",
         scrolled || open
           ? "border-border bg-background/85 shadow-[0_8px_30px_-12px_oklch(0%_0_0_/_0.5)] backdrop-blur-xl"
           : "border-foreground/10 bg-background/55 backdrop-blur-md",
@@ -222,7 +223,10 @@ export function PillNav({ brand, links, ctaLabel, ctaHref, secondaryCta }: PillN
       </div>
 
       {open && (
-        <div className="theme-dark bg-background fixed inset-0 top-16 z-40 animate-[lsFadeIn_180ms_var(--ease-out)] overflow-y-auto md:hidden">
+        <div
+          data-lenis-prevent
+          className="theme-dark bg-background absolute inset-x-0 top-full z-40 h-[calc(100dvh-4rem)] animate-[lsFadeIn_180ms_var(--ease-out)] overflow-y-auto md:hidden"
+        >
           <div className="flex min-h-full flex-col px-6 py-6">
             <nav className="flex flex-col gap-1">
               {links.map((item, i) =>
@@ -294,7 +298,6 @@ export function PillNav({ brand, links, ctaLabel, ctaHref, secondaryCta }: PillN
               {secondaryCta && (
                 <Link
                   href={secondaryCta.href}
-                  onClick={() => setOpen(false)}
                   className="border-foreground/15 text-foreground hover:bg-foreground/5 inline-flex items-center justify-center rounded-full border px-5 py-3 text-sm font-medium transition-colors"
                 >
                   {secondaryCta.label}
@@ -302,7 +305,6 @@ export function PillNav({ brand, links, ctaLabel, ctaHref, secondaryCta }: PillN
               )}
               <Link
                 href={ctaHref}
-                onClick={() => setOpen(false)}
                 className="bg-brand text-brand-foreground hover:bg-brand-hover inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-sm font-medium transition-colors"
               >
                 {ctaLabel}
