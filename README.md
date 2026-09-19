@@ -31,9 +31,16 @@ Your app includes:
 - PostgreSQL storage and database migrations.
 - PydanticAI with OpenAI integration and streaming chat.
 
-RAG/document search, billing, teams, Redis, Google login, and external monitoring
-were not enabled in this local configuration. They are available template options,
-not features automatically included in every generated app.
+The app also includes a local customer-support pilot: company workspaces, team
+invitations, document upload/search, support cases, cited AI drafts, human review,
+and usage limits. Open **Support** after signing in. Start the separate document
+worker using the [support runbook](docs/runbooks/support-pilot.md).
+
+The pilot currently uses native PostgreSQL and keyword search, with optional
+OpenAI embeddings. Live AI testing is pending; an operator key is required for
+draft generation. Billing, Redis, Google login and hosted monitoring remain
+disabled. See the [implementation status](docs/support-assistant-plan.md) for
+production rollout and evaluation work that remains.
 
 | Location | Purpose |
 | --- | --- |
