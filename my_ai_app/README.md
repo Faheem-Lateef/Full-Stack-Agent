@@ -1,6 +1,9 @@
 # my_ai_app
 
-A FastAPI project
+AgentHarbor: an AI workspace with a customer-support pilot. Open `/support` to
+create a company workspace, upload knowledge, and review support reply drafts.
+See the [support runbook](../docs/runbooks/support-pilot.md) for required API,
+worker and frontend startup, limits and pending live-provider verification.
 
 > Generated with [Full-Stack AI Agent Template](https://github.com/vstorm-co/full-stack-ai-agent-template).
 
