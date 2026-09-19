@@ -31,6 +31,7 @@
     "logout": "Wyloguj"
   },
   "nav": {
+    "support": "Wsparcie",
     "dashboard": "Panel",
     "chat": "Czat",
     "knowledge": "Wiedza",
