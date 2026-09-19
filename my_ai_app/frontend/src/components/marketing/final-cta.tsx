@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
 
