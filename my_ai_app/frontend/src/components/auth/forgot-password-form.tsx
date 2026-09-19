@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
+import { NavigationLink as Link } from "@/components/navigation-link";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, ArrowRight, Mail } from "lucide-react";
 
-import { Button, Input, Label } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { apiClient, ApiError } from "@/lib/api-client";
 import { ROUTES } from "@/lib/constants";
 import { EMAIL_RE } from "@/lib/utils";
