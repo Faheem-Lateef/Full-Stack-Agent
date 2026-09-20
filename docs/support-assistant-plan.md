@@ -8,7 +8,7 @@ The generated application now includes workspace/team management, invitations, a
 
 The local environment lacks pgvector and a running Docker engine, so the pilot uses PostgreSQL job dispatch/private file bytes and bounded exact retrieval instead of the proposed pgvector/Redis/Celery/object-storage deployment. See [decision 0004](decisions/0004-support-pilot.md) and the [support runbook](runbooks/support-pilot.md) for the actual implementation and limitations. Screens share the support workspace component; case/document selection is in-page rather than separate detail URLs. Progress uses polling rather than streaming. Invitation tokens are shared manually.
 
-The user selected OpenAI and requested that paid live tests remain pending. Customer interviews, a customer-supplied held-out evaluation set, paid model/embedding verification, production infrastructure, restore/load testing and pilot business-outcome measurements remain open. The estimates and targets below are the original plan, not achieved results. No provider key or fabricated live answer was added.
+The user selected OpenAI and subsequently authorized live testing on 2026-09-20. A key was added only to the ignored backend `.env`, but OpenAI rejected the real request with `429 credit_balance_exhausted` (`insufficient_quota`). No successful live answer was obtained. The [functional review](reports/product-review-2026-09-20.md) records executed checks and confirmed weaknesses. Customer interviews, a customer-supplied held-out evaluation set, successful model/embedding verification, production infrastructure, restore/load testing and pilot business-outcome measurements remain open. The estimates and targets below are the original plan, not achieved results.
 
 ## 1. Product outcome
 
