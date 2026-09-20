@@ -1,0 +1,1727 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Production-Ready AI/LLM Applications — In Minutes, Not Weeks">
+      
+      
+      
+        <link rel="canonical" href="https://vstorm-co.github.io/full-stack-ai-agent-template/support-assistant-plan/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>AgentHarbor customer-support assistant: implementation plan - Full-Stack AI Agent Template</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+  
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+    
+      
+      
+    
+  
+  
+  <style>:root{--md-admonition-icon--note:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1%207.775V2.75C1%201.784%201.784%201%202.75%201h5.025c.464%200%20.91.184%201.238.513l6.25%206.25a1.75%201.75%200%200%201%200%202.474l-5.026%205.026a1.75%201.75%200%200%201-2.474%200l-6.25-6.25A1.75%201.75%200%200%201%201%207.775m1.5%200c0%20.066.026.13.073.177l6.25%206.25a.25.25%200%200%200%20.354%200l5.025-5.025a.25.25%200%200%200%200-.354l-6.25-6.25a.25.25%200%200%200-.177-.073H2.75a.25.25%200%200%200-.25.25ZM6%205a1%201%200%201%201%200%202%201%201%200%200%201%200-2%22/%3E%3C/svg%3E');--md-admonition-icon--abstract:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.5%201.75v11.5c0%20.138.112.25.25.25h3.17a.75.75%200%200%201%200%201.5H2.75A1.75%201.75%200%200%201%201%2013.25V1.75C1%20.784%201.784%200%202.75%200h8.5C12.216%200%2013%20.784%2013%201.75v7.736a.75.75%200%200%201-1.5%200V1.75a.25.25%200%200%200-.25-.25h-8.5a.25.25%200%200%200-.25.25m13.274%209.537zl-4.557%204.45a.75.75%200%200%201-1.055-.008l-1.943-1.95a.75.75%200%200%201%201.062-1.058l1.419%201.425%204.026-3.932a.75.75%200%201%201%201.048%201.074M4.75%204h4.5a.75.75%200%200%201%200%201.5h-4.5a.75.75%200%200%201%200-1.5M4%207.75A.75.75%200%200%201%204.75%207h2a.75.75%200%200%201%200%201.5h-2A.75.75%200%200%201%204%207.75%22/%3E%3C/svg%3E');--md-admonition-icon--info:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.5%207.75A.75.75%200%200%201%207.25%207h1a.75.75%200%200%201%20.75.75v2.75h.25a.75.75%200%200%201%200%201.5h-2a.75.75%200%200%201%200-1.5h.25v-2h-.25a.75.75%200%200%201-.75-.75M8%206a1%201%200%201%201%200-2%201%201%200%200%201%200%202%22/%3E%3C/svg%3E');--md-admonition-icon--tip:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M3.499.75a.75.75%200%200%201%201.5%200v.996C5.9%202.903%206.793%203.65%207.662%204.376l.24.202c-.036-.694.055-1.422.426-2.163C9.1.873%2010.794-.045%2012.622.26%2014.408.558%2016%201.94%2016%204.25c0%201.278-.954%202.575-2.44%202.734l.146.508.065.22c.203.701.412%201.455.476%202.226.142%201.707-.4%203.03-1.487%203.898C11.714%2014.671%2010.27%2015%208.75%2015h-6a.75.75%200%200%201%200-1.5h1.376a4.5%204.5%200%200%201-.563-1.191%203.84%203.84%200%200%201-.05-2.063%204.65%204.65%200%200%201-2.025-.293.75.75%200%200%201%20.525-1.406c1.357.507%202.376-.006%202.698-.318l.009-.01a.747.747%200%200%201%201.06%200%20.75.75%200%200%201-.012%201.074c-.912.92-.992%201.835-.768%202.586.221.74.745%201.337%201.196%201.621H8.75c1.343%200%202.398-.296%203.074-.836.635-.507%201.036-1.31.928-2.602-.05-.603-.216-1.224-.422-1.93l-.064-.221c-.12-.407-.246-.84-.353-1.29a2.4%202.4%200%200%201-.507-.441%203.1%203.1%200%200%201-.633-1.248.75.75%200%200%201%201.455-.364c.046.185.144.436.31.627.146.168.353.305.712.305.738%200%201.25-.615%201.25-1.25%200-1.47-.95-2.315-2.123-2.51-1.172-.196-2.227.387-2.706%201.345-.46.92-.27%201.774.019%203.062l.042.19.01.05c.348.443.666.949.94%201.553a.75.75%200%201%201-1.365.62c-.553-1.217-1.32-1.94-2.3-2.768L6.7%205.527c-.814-.68-1.75-1.462-2.692-2.619a3.7%203.7%200%200%200-1.023.88c-.406.495-.663%201.036-.722%201.508.116.122.306.21.591.239.388.038.797-.06%201.032-.19a.75.75%200%200%201%20.728%201.31c-.515.287-1.23.439-1.906.373-.682-.067-1.473-.38-1.879-1.193L.75%205.677V5.5c0-.984.48-1.94%201.077-2.664.46-.559%201.05-1.055%201.673-1.353z%22/%3E%3C/svg%3E');--md-admonition-icon--success:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M13.78%204.22a.75.75%200%200%201%200%201.06l-7.25%207.25a.75.75%200%200%201-1.06%200L2.22%209.28a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018L6%2010.94l6.72-6.72a.75.75%200%200%201%201.06%200%22/%3E%3C/svg%3E');--md-admonition-icon--question:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M0%208a8%208%200%201%201%2016%200A8%208%200%200%201%200%208m8-6.5a6.5%206.5%200%201%200%200%2013%206.5%206.5%200%200%200%200-13M6.92%206.085h.001a.749.749%200%201%201-1.342-.67c.169-.339.436-.701.849-.977C6.845%204.16%207.369%204%208%204a2.76%202.76%200%200%201%201.637.525c.503.377.863.965.863%201.725%200%20.448-.115.83-.329%201.15-.205.307-.47.513-.692.662-.109.072-.22.138-.313.195l-.006.004a6%206%200%200%200-.26.16%201%201%200%200%200-.276.245.75.75%200%200%201-1.248-.832c.184-.264.42-.489.692-.661q.154-.1.313-.195l.007-.004c.1-.061.182-.11.258-.161a1%201%200%200%200%20.277-.245C8.96%206.514%209%206.427%209%206.25a.61.61%200%200%200-.262-.525A1.27%201.27%200%200%200%208%205.5c-.369%200-.595.09-.74.187a1%201%200%200%200-.34.398M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--warning:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M6.457%201.047c.659-1.234%202.427-1.234%203.086%200l6.082%2011.378A1.75%201.75%200%200%201%2014.082%2015H1.918a1.75%201.75%200%200%201-1.543-2.575Zm1.763.707a.25.25%200%200%200-.44%200L1.698%2013.132a.25.25%200%200%200%20.22.368h12.164a.25.25%200%200%200%20.22-.368Zm.53%203.996v2.5a.75.75%200%200%201-1.5%200v-2.5a.75.75%200%200%201%201.5%200M9%2011a1%201%200%201%201-2%200%201%201%200%200%201%202%200%22/%3E%3C/svg%3E');--md-admonition-icon--failure:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M2.344%202.343za8%208%200%200%201%2011.314%2011.314A8.002%208.002%200%200%201%20.234%2010.089a8%208%200%200%201%202.11-7.746m1.06%2010.253a6.5%206.5%200%201%200%209.108-9.275%206.5%206.5%200%200%200-9.108%209.275M6.03%204.97%208%206.94l1.97-1.97a.749.749%200%200%201%201.275.326.75.75%200%200%201-.215.734L9.06%208l1.97%201.97a.749.749%200%200%201-.326%201.275.75.75%200%200%201-.734-.215L8%209.06l-1.97%201.97a.749.749%200%200%201-1.275-.326.75.75%200%200%201%20.215-.734L6.94%208%204.97%206.03a.75.75%200%200%201%20.018-1.042.75.75%200%200%201%201.042-.018%22/%3E%3C/svg%3E');--md-admonition-icon--danger:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M9.504.43a1.516%201.516%200%200%201%202.437%201.713L10.415%205.5h2.123c1.57%200%202.346%201.909%201.22%203.004l-7.34%207.142a1.25%201.25%200%200%201-.871.354h-.302a1.25%201.25%200%200%201-1.157-1.723L5.633%2010.5H3.462c-1.57%200-2.346-1.909-1.22-3.004zm1.047%201.074L3.286%208.571A.25.25%200%200%200%203.462%209H6.75a.75.75%200%200%201%20.694%201.034l-1.713%204.188%206.982-6.793A.25.25%200%200%200%2012.538%207H9.25a.75.75%200%200%201-.683-1.06l2.008-4.418.003-.006-.004-.009-.006-.006-.008-.001q-.005%200-.009.004%22/%3E%3C/svg%3E');--md-admonition-icon--bug:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M4.72.22a.75.75%200%200%201%201.06%200l1%20.999a3.5%203.5%200%200%201%202.441%200l.999-1a.748.748%200%200%201%201.265.332.75.75%200%200%201-.205.729l-.775.776c.616.63.995%201.493.995%202.444v.327q0%20.15-.025.292c.408.14.764.392%201.029.722l1.968-.787a.75.75%200%200%201%20.556%201.392L13%207.258V9h2.25a.75.75%200%200%201%200%201.5H13v.5q-.002.615-.141%201.186l2.17.868a.75.75%200%200%201-.557%201.392l-2.184-.873A5%205%200%200%201%208%2016a5%205%200%200%201-4.288-2.427l-2.183.873a.75.75%200%200%201-.558-1.392l2.17-.868A5%205%200%200%201%203%2011v-.5H.75a.75.75%200%200%201%200-1.5H3V7.258L.971%206.446a.75.75%200%200%201%20.558-1.392l1.967.787c.265-.33.62-.583%201.03-.722a1.7%201.7%200%200%201-.026-.292V4.5c0-.951.38-1.814.995-2.444L4.72%201.28a.75.75%200%200%201%200-1.06m.53%206.28a.75.75%200%200%200-.75.75V11a3.5%203.5%200%201%200%207%200V7.25a.75.75%200%200%200-.75-.75ZM6.173%205h3.654A.17.17%200%200%200%2010%204.827V4.5a2%202%200%201%200-4%200v.327c0%20.096.077.173.173.173%22/%3E%3C/svg%3E');--md-admonition-icon--example:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M5%205.782V2.5h-.25a.75.75%200%200%201%200-1.5h6.5a.75.75%200%200%201%200%201.5H11v3.282l3.666%205.76C15.619%2013.04%2014.543%2015%2012.767%2015H3.233c-1.776%200-2.852-1.96-1.899-3.458Zm-2.4%206.565a.75.75%200%200%200%20.633%201.153h9.534a.75.75%200%200%200%20.633-1.153L12.225%2010.5h-8.45ZM9.5%202.5h-3V6c0%20.143-.04.283-.117.403L4.73%209h6.54L9.617%206.403A.75.75%200%200%201%209.5%206Z%22/%3E%3C/svg%3E');--md-admonition-icon--quote:url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2016%2016%22%3E%3Cpath%20d%3D%22M1.75%202.5h10.5a.75.75%200%200%201%200%201.5H1.75a.75.75%200%200%201%200-1.5m4%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5m0%205h8.5a.75.75%200%200%201%200%201.5h-8.5a.75.75%200%200%201%200-1.5M2.5%207.75v6a.75.75%200%200%201-1.5%200v-6a.75.75%200%200%201%201.5%200%22/%3E%3C/svg%3E');}</style>
+
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config",""),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#agentharbor-customer-support-assistant-implementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+              </button>
+            
+            
+<a href="https://github.com/vstorm-co/full-stack-ai-agent-template">
+  <span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg></span>
+  <strong>Star us on GitHub</strong> — Help us reach more developers!
+</a>
+
+          </div>
+          
+            <script>var el=document.querySelector("[data-md-component=announce]");if(el){var content=el.querySelector(".md-typeset");__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0)}</script>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Full-Stack AI Agent Template" class="md-header__button md-logo" aria-label="Full-Stack AI Agent Template" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Full-Stack AI Agent Template
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              AgentHarbor customer-support assistant: implementation plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="pink" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/vstorm-co/full-stack-ai-agent-template" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vstorm-co/full-stack-ai-agent-template
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Full-Stack AI Agent Template" class="md-nav__button md-logo" aria-label="Full-Stack AI Agent Template" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Full-Stack AI Agent Template
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/vstorm-co/full-stack-ai-agent-template" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    vstorm-co/full-stack-ai-agent-template
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gallery/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Screenshots
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Help
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../concepts/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ai-agent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Agents
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../guides/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/quick-start/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/version-upgrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Version Upgrade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deployment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../observability/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Observability
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-status-2026-09-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation status (2026-09-20)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-product-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Product outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-existing-foundation-and-gaps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Existing foundation and gaps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-mvp-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. MVP scope
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-user-journeys-and-screens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. User journeys and screens
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. User journeys and screens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workspace-owner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace owner
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#support-employee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Support employee
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proposed-frontend-routes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Proposed frontend routes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-architecture-and-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Architecture and infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-data-model-and-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Data model and authorization
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-knowledge-ingestion-and-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Knowledge ingestion and lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-retrieval-and-draft-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Retrieval and draft generation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-api-and-code-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. API and code changes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-delivery-sequence-and-acceptance-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Delivery sequence and acceptance gates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-test-and-evaluation-plan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Test and evaluation plan
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-performance-cost-and-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Performance, cost and operations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-deployment-and-rollback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Deployment and rollback
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-decisions-to-settle-during-phase-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Decisions to settle during phase 0
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="agentharbor-customer-support-assistant-implementation-plan">AgentHarbor customer-support assistant: implementation plan<a class="headerlink" href="#agentharbor-customer-support-assistant-implementation-plan" title="Permanent link">&para;</a></h1>
+<p>Status: local functional pilot implemented; production rollout and live-provider evaluation pending. Prepared 2026-09-20.</p>
+<h2 id="implementation-status-2026-09-20">Implementation status (2026-09-20)<a class="headerlink" href="#implementation-status-2026-09-20" title="Permanent link">&para;</a></h2>
+<p>The generated application now includes workspace/team management, invitations, a knowledge library, a durable native worker, bounded document parsing, scoped keyword retrieval with optional OpenAI embeddings, support cases, structured cited drafting, editable revisions, approval/copy controls, feedback, usage limits and isolation tests. Additive migrations are <code>0029_support</code> and <code>0030_support_owner_retention</code>.</p>
+<p>The local environment lacks pgvector and a running Docker engine, so the pilot uses PostgreSQL job dispatch/private file bytes and bounded exact retrieval instead of the proposed pgvector/Redis/Celery/object-storage deployment. See <a href="../decisions/0004-support-pilot/">decision 0004</a> and the <a href="../runbooks/support-pilot/">support runbook</a> for the actual implementation and limitations. Screens share the support workspace component; case/document selection is in-page rather than separate detail URLs. Progress uses polling rather than streaming. Invitation tokens are shared manually.</p>
+<p>The user selected OpenAI and subsequently authorized live testing on 2026-09-20. A key was added only to the ignored backend <code>.env</code>, but OpenAI rejected the real request with <code>429 credit_balance_exhausted</code> (<code>insufficient_quota</code>). No successful live answer was obtained. The <a href="../reports/product-review-2026-09-20/">functional review</a> records executed checks and confirmed weaknesses. Customer interviews, a customer-supplied held-out evaluation set, successful model/embedding verification, production infrastructure, restore/load testing and pilot business-outcome measurements remain open. The estimates and targets below are the original plan, not achieved results.</p>
+<h2 id="1-product-outcome">1. Product outcome<a class="headerlink" href="#1-product-outcome" title="Permanent link">&para;</a></h2>
+<p>Help a support employee turn a customer question into an accurate, editable reply using their company's approved documents. Show the evidence behind the reply. When the documents do not answer the question, ask for clarification or recommend escalation instead of inventing company policy.</p>
+<p>Initial customer hypothesis: small software companies with a support team and FAQs, product guides, and policy documents. Validate this audience before building the full product.</p>
+<p>The first release is an internal drafting assistant. Staff paste a question, review the draft and sources, edit it, and copy it into their existing helpdesk. Copying does not mean the reply was sent. Automatic customer replies, refunds, account changes, and other external actions are outside this release.</p>
+<h2 id="2-existing-foundation-and-gaps">2. Existing foundation and gaps<a class="headerlink" href="#2-existing-foundation-and-gaps" title="Permanent link">&para;</a></h2>
+<p>The product lives in <code>my_ai_app/</code>; the repository also contains a separate application generator.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Existing foundation</th>
+<th>Work required</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity</td>
+<td>Authentication, users, application admin</td>
+<td>Company workspaces, memberships, invitations, workspace roles</td>
+</tr>
+<tr>
+<td>Conversation</td>
+<td>Personal conversations, messages, sharing</td>
+<td>Separate workspace support cases and draft history</td>
+</tr>
+<tr>
+<td><abbr title="Artificial Intelligence">AI</abbr></td>
+<td>PydanticAI, server-managed OpenAI/OrcaRouter selection</td>
+<td>Restricted support agent, retrieval, structured drafts and citations</td>
+</tr>
+<tr>
+<td>Files</td>
+<td>Owner-scoped chat attachments and storage service</td>
+<td>Workspace knowledge upload, extraction, indexing, versioning and deletion</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>Persistent personal agent memory</td>
+<td>Keep personal memory out of company support answers</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>PostgreSQL and Alembic migrations</td>
+<td>Workspace tables, knowledge chunks, vectors, support workflow records</td>
+</tr>
+<tr>
+<td>UI</td>
+<td>Next.js, auth pages, dashboard, settings</td>
+<td>Knowledge library, reply editor, source viewer, team settings</td>
+</tr>
+<tr>
+<td>Quality</td>
+<td>Backend/frontend checks and browser smoke tests</td>
+<td>Tenant isolation tests, retrieval evaluations, worker recovery tests</td>
+</tr>
+</tbody>
+</table>
+<p>RAG ingestion, retrieval, and vector-store implementations exist under <code>template/{{cookiecutter.project_slug}}/backend/app/services/rag/</code>. They are reference code, not enabled functionality in this app. Review and adapt useful parts with tests; do not regenerate over the customized application or assume template code is workspace-safe.</p>
+<h2 id="3-mvp-scope">3. MVP scope<a class="headerlink" href="#3-mvp-scope" title="Permanent link">&para;</a></h2>
+<p>Include:</p>
+<ul>
+<li>Workspace creation and switching; owner/admin/agent roles.</li>
+<li>Invite existing or new users through expiring, single-use invitations. Begin with owner-copied invite links; automated invitation email needs a configured email provider.</li>
+<li>Upload English text PDFs, TXT and Markdown files. Add DOCX only if discovery shows it is essential.</li>
+<li>Show upload, processing, ready, failed and archived states; provide actionable failure messages and retry.</li>
+<li>Search approved company knowledge and generate a cited draft.</li>
+<li>Review, edit, approve and copy a draft; retain revision history.</li>
+<li>Save support cases, retrieve previous drafts, and collect feedback.</li>
+<li>Workspace document, storage, generation and concurrency limits.</li>
+<li>Basic operational metrics and a workspace usage view.</li>
+</ul>
+<p>Defer helpdesk/email/WhatsApp connectors, website crawling, scanned-PDF OCR, automatic sending, billing, customer-facing chatbots, document-level permissions, customer account lookups and multilingual promises. All workspace members can read that workspace's approved knowledge and support cases in the MVP; do not onboard teams needing finer access controls until those exist.</p>
+<h2 id="4-user-journeys-and-screens">4. User journeys and screens<a class="headerlink" href="#4-user-journeys-and-screens" title="Permanent link">&para;</a></h2>
+<h3 id="workspace-owner">Workspace owner<a class="headerlink" href="#workspace-owner" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Create a workspace and set its name, support tone and escalation instructions.</li>
+<li>Upload a small set of approved FAQs, policies and product guides.</li>
+<li>Watch processing progress; resolve unsupported or empty documents.</li>
+<li>Run a sample question and inspect its cited passages.</li>
+<li>Invite support staff and set usage limits.</li>
+</ol>
+<h3 id="support-employee">Support employee<a class="headerlink" href="#support-employee" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open <code>/support</code> and create a case by pasting a customer question.</li>
+<li>Click <strong>Draft reply</strong> once; see retrieval and generation progress, with cancellation.</li>
+<li>Read the proposed reply beside its sources and any missing-information notice.</li>
+<li>Open a source to inspect the precise supporting passage and document version.</li>
+<li>Edit and approve the draft, then copy it into the existing helpdesk.</li>
+<li>Optionally mark it helpful or report an incorrect claim/source.</li>
+</ol>
+<h3 id="proposed-frontend-routes">Proposed frontend routes<a class="headerlink" href="#proposed-frontend-routes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Route</th>
+<th>Main contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/support</code></td>
+<td>Case history, search, new case</td>
+</tr>
+<tr>
+<td><code>/support/[id]</code></td>
+<td>Customer question, draft editor, sources, revisions, feedback</td>
+</tr>
+<tr>
+<td><code>/knowledge</code></td>
+<td>Documents, statuses, upload, retry, replace, archive/delete</td>
+</tr>
+<tr>
+<td><code>/knowledge/[id]</code></td>
+<td>Metadata, versions, extracted content, processing errors</td>
+</tr>
+<tr>
+<td><code>/settings/workspace</code></td>
+<td>Name, tone and escalation settings</td>
+</tr>
+<tr>
+<td><code>/settings/team</code></td>
+<td>Members, invitations and roles</td>
+</tr>
+<tr>
+<td><code>/settings/usage</code></td>
+<td>Storage, generation usage and remaining allowance</td>
+</tr>
+</tbody>
+</table>
+<p>Build within the existing locale/dashboard layout. Include mobile layouts, keyboard access, accessible progress indicators, empty states, network failures and permission failures. Preserve unsaved edits after failed saves or generation. Do not display a fabricated numerical confidence percentage.</p>
+<h2 id="5-architecture-and-infrastructure">5. Architecture and infrastructure<a class="headerlink" href="#5-architecture-and-infrastructure" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    Staff[Support employee] --&gt; UI[Next.js workspace]
+    UI --&gt; API[FastAPI: authentication and workspace authorization]
+    API --&gt; DB[(PostgreSQL: application records and vectors)]
+    API --&gt; Storage[Private document storage]
+    API --&gt; Queue[Redis / Celery]
+    Queue --&gt; Worker[Document processing worker]
+    Worker --&gt; Storage
+    Worker --&gt; Embed[Embedding provider]
+    Worker --&gt; DB
+    API --&gt; Retrieval[Workspace-scoped retrieval]
+    Retrieval --&gt; DB
+    Retrieval --&gt; Draft[Restricted support agent]
+    Draft --&gt; LLM[Configured LLM provider]
+    Draft --&gt; UI</code></pre>
+<ul>
+<li>Keep Next.js, FastAPI, SQLAlchemy and PostgreSQL. Follow routes → services → repositories.</li>
+<li>Proposed search store: PostgreSQL with pgvector, avoiding a separate vector database for the pilot. Confirm extension availability on the actual database before committing to this choice. The current native PostgreSQL installation does not establish that pgvector is installed.</li>
+<li>Start with workspace-filtered exact vector search plus PostgreSQL text search and rank fusion. Evaluate recall before introducing approximate indexes. pgvector documents that approximate-index filtering can reduce returned results; benchmark tenant-filtered queries before an index change: <a href="https://github.com/pgvector/pgvector">pgvector documentation</a>.</li>
+<li>Proposed ingestion worker: Celery with Redis, running in Linux containers for local Windows development and deployment. First verify compatibility with the project's locked dependencies and Python version. Jobs must be idempotent and retry safely: <a href="https://docs.celeryq.dev/en/stable/userguide/tasks.html">Celery task guidance</a>.</li>
+<li>Use private local storage for development and private object storage for deployed originals. Serve downloads only after authorization or through short-lived authorized URLs. Never place company files in frontend <code>public/</code>.</li>
+<li>Treat embedding configuration separately from generation configuration. Do not assume that the selected chat gateway supports embeddings. Pin and record embedding model, vector dimension and extraction/chunking versions.</li>
+<li>Keep provider keys server-side. Per-user keys are outside the MVP. Document which provider receives document text and customer questions during pilot onboarding.</li>
+</ul>
+<p>Preflight deliverable: a working disposable environment with the extension, worker, storage and embedding provider, without altering existing user data. If pgvector cannot be provisioned, decide on a separate development database or alternative store before schema work.</p>
+<h2 id="6-data-model-and-authorization">6. Data model and authorization<a class="headerlink" href="#6-data-model-and-authorization" title="Permanent link">&para;</a></h2>
+<p>All new company-owned records carry <code>workspace_id</code>. Use workspace-qualified foreign keys or equivalent database constraints to prevent cross-workspace relationships. Authorize membership at every <abbr title="Application Programming Interface">API</abbr> operation, including source previews, streaming, exports and downloads. Derive the acting user from the session; validate every supplied workspace ID.</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Important fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>workspaces</code></td>
+<td>ID, name, settings, status</td>
+</tr>
+<tr>
+<td><code>workspace_memberships</code></td>
+<td>Workspace, user, role; unique workspace/user</td>
+</tr>
+<tr>
+<td><code>workspace_invitations</code></td>
+<td>Workspace, normalized email, role, token hash, expiry, consumed/revoked time</td>
+</tr>
+<tr>
+<td><code>knowledge_documents</code></td>
+<td>Workspace, title, active version, state, creator</td>
+</tr>
+<tr>
+<td><code>knowledge_versions</code></td>
+<td>Workspace, document, checksum, private storage key, parser version, status</td>
+</tr>
+<tr>
+<td><code>knowledge_chunks</code></td>
+<td>Workspace, document version, ordinal, text, page/section, embedding and model version</td>
+</tr>
+<tr>
+<td><code>ingestion_jobs</code></td>
+<td>Workspace, version, state, attempts, lease/heartbeat, sanitized error</td>
+</tr>
+<tr>
+<td><code>support_cases</code></td>
+<td>Workspace, creator, customer question, title, status</td>
+</tr>
+<tr>
+<td><code>support_drafts</code></td>
+<td>Workspace, case, revision, original generation, edited text, outcome, approver</td>
+</tr>
+<tr>
+<td><code>draft_citations</code></td>
+<td>Draft, source version/chunk, excerpt, citation label</td>
+</tr>
+<tr>
+<td><code>generation_runs</code></td>
+<td>Workspace, case, idempotency key, status, model/prompt versions, timing and usage</td>
+</tr>
+<tr>
+<td><code>usage_events</code></td>
+<td>Workspace, operation, tokens/bytes, provider-reported usage, timestamps</td>
+</tr>
+<tr>
+<td><code>audit_events</code></td>
+<td>Workspace, actor, action, object reference, time</td>
+</tr>
+</tbody>
+</table>
+<p>Role policy: owner controls ownership and workspace deletion; owner/admin manage documents and members; agents read approved knowledge and create/review drafts. Prevent removing or demoting the last owner. Application-wide admin status must not silently grant routine access to all company documents.</p>
+<p>Existing personal conversations, attachments and memory remain personal. Do not automatically share or reassign them. Existing users explicitly create/join workspaces. Review public registration's first-user-admin bootstrap before exposing a public pilot; provision the deployment owner deliberately.</p>
+<p>Migration approach: additive tables and indexes, no destructive backfill. Test against a copy of the current schema. Store embeddings for one selected model/dimension initially; later model changes require re-embedding into a new version before switching reads.</p>
+<h2 id="7-knowledge-ingestion-and-lifecycle">7. Knowledge ingestion and lifecycle<a class="headerlink" href="#7-knowledge-ingestion-and-lifecycle" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Authorize upload and check workspace quota before accepting a bounded stream.</li>
+<li>Validate filename, declared MIME type and file signature; reject oversized, encrypted, unsupported or unreadable files. Configure an initial limit of 10 MB and 200 pages, then revisit after pilot measurements.</li>
+<li>Store the original privately and create a version plus durable ingestion job. Use an outbox/dispatcher or equivalent recovery mechanism so a committed upload cannot lose its queued job.</li>
+<li>Scan untrusted files and parse in an isolated worker with CPU, memory and time limits. Surface scanned/empty PDFs as requiring OCR rather than marking them ready.</li>
+<li>Extract text while preserving page numbers, headings and source offsets. Remove extraction noise conservatively.</li>
+<li>Begin with roughly 400–800-token chunks and 50–100-token overlap; tune against evaluation data rather than treating these as fixed requirements.</li>
+<li>Generate embeddings in bounded batches, with timeouts and retry only for transient failures.</li>
+<li>Persist chunks idempotently. Publish the new document version atomically only after processing succeeds.</li>
+<li>Keep the previous ready version active during replacement. Failed replacement must not remove working knowledge.</li>
+<li>On archive/delete, immediately exclude the document from retrieval and invalidate related caches. Purge blobs, chunks and embeddings asynchronously according to the retention policy. A running job must check deletion state before publishing.</li>
+</ol>
+<p>Old drafts retain source identifiers/version metadata. If a source is deleted, show it as unavailable; hard deletion must also purge stored excerpts that would otherwise preserve deleted content. Explain backup retention separately. Reprocessing and job redelivery must not create duplicate chunks or usage charges recorded twice.</p>
+<h2 id="8-retrieval-and-draft-generation">8. Retrieval and draft generation<a class="headerlink" href="#8-retrieval-and-draft-generation" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Authorize the support case, check the generation allowance and reserve capacity atomically.</li>
+<li>Persist a generation run using a client request/idempotency key. A double-click returns the same run instead of starting another paid request.</li>
+<li>Retrieve only ready, active knowledge from the authorized workspace. Apply this restriction to lexical and vector queries, cache keys, source lookups and background work.</li>
+<li>Combine lexical and semantic candidates, remove duplicates, and fit selected passages into a bounded context budget. Start with up to 20 candidates and 5–8 final passages, then evaluate.</li>
+<li>Use a dedicated support agent with no web browsing, shell, general-purpose tools or personal memory. Customer questions and retrieved files are untrusted content, not instructions that can override the support task.</li>
+<li>Request structured output: <code>answerable</code>, <code>needs_clarification</code>, <code>insufficient_evidence</code>, or <code>conflicting_sources</code>; reply text; citation references; follow-up question/escalation reason where applicable.</li>
+<li>Require citations for factual company-policy/product claims. Validate that cited chunk IDs were actually supplied and still belong to active authorized sources. This validates provenance, not truth; semantic support also needs evaluations and human review.</li>
+<li>Do not produce an ordinary definitive answer for missing or conflicting evidence. Present a clarification/escalation draft instead.</li>
+<li>Save the generated revision, retrieved evidence references, model/prompt versions and usage. Human edits create a new revision and invalidate previous approval. Citations are not automatically proof of newly edited claims.</li>
+<li>Stream progress and optionally provisional text, but keep copy/approval unavailable until source validation finishes. Handle disconnects, cancellation and provider errors without losing the staff member's edited text. Report partial provider usage when available; never assume cancellation is free.</li>
+</ol>
+<h2 id="9-api-and-code-changes">9. <abbr title="Application Programming Interface">API</abbr> and code changes<a class="headerlink" href="#9-api-and-code-changes" title="Permanent link">&para;</a></h2>
+<p>Proposed FastAPI routes under <code>/api/v1</code>, with corresponding frontend proxy handlers using the existing auth/cookie conventions:</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint group</th>
+<th>Operations</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/workspaces</code></td>
+<td>Create/list; read/update authorized workspace</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/members</code></td>
+<td>List members, change role, remove member</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/invitations</code></td>
+<td>Create/revoke invitation; separate authenticated acceptance endpoint</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/knowledge</code></td>
+<td>List/upload documents; inspect version, replace, retry, archive/delete, authorized preview</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/support/cases</code></td>
+<td>Create/list/read/update cases</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/support/cases/{case_id}/generations</code></td>
+<td>Start idempotent generation; status/events/cancel</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/support/cases/{case_id}/drafts</code></td>
+<td>Read/save revisions, approve, record copy event, feedback</td>
+</tr>
+<tr>
+<td><code>/workspaces/{id}/usage</code></td>
+<td>Read consumption and limits</td>
+</tr>
+</tbody>
+</table>
+<p>Return 202 for queued ingestion/generation, consistent permission/not-found behavior, 409 for stale edits, 413 for oversized uploads and 429 for quota exhaustion. Do not retry non-idempotent requests blindly. Use version checks on draft saves so two employees cannot silently overwrite each other.</p>
+<p>Implementation locations:</p>
+<ul>
+<li><code>backend/app/db/models/</code>, <code>schemas/</code>, <code>repositories/</code>: new workspace, knowledge and support entities.</li>
+<li><code>backend/app/services/knowledge/</code>: ingestion orchestration, extraction and retrieval.</li>
+<li><code>backend/app/services/support.py</code>: case/draft lifecycle and usage policy.</li>
+<li><code>backend/app/agents/support.py</code>: restricted prompt, dependencies and structured output.</li>
+<li><code>backend/app/api/deps.py</code>: workspace authorization dependencies and service wiring.</li>
+<li><code>backend/app/api/routes/v1/</code>: workspace, knowledge and support routes.</li>
+<li><code>backend/app/worker/</code>: ingestion tasks and dispatch/recovery.</li>
+<li><code>backend/alembic/versions/</code>: incremental schema migrations.</li>
+<li><code>frontend/src/app/[locale]/(dashboard)/</code>: new screens.</li>
+<li><code>frontend/src/components/knowledge/</code>, <code>components/support/</code>, <code>hooks/</code>: UI and workspace-qualified data queries.</li>
+<li><code>frontend/src/app/api/</code>: authenticated proxy endpoints and streaming.</li>
+<li><code>docs/decisions/</code>, <code>docs/runbooks/</code>, <code>.env.example</code>: decisions, deployment/recovery guidance and documented configuration.</li>
+</ul>
+<p>Names are proposed and should be reconciled with repository conventions during implementation. Changes target the generated app; generator/template parity is a separate project.</p>
+<h2 id="10-delivery-sequence-and-acceptance-gates">10. Delivery sequence and acceptance gates<a class="headerlink" href="#10-delivery-sequence-and-acceptance-gates" title="Permanent link">&para;</a></h2>
+<p>Estimates assume one full-time experienced developer, prompt customer feedback, and access to a working provider. They are planning ranges, not delivery commitments. Rough total: 35–51 engineering days, plus 1–2 calendar weeks of pilot observation; discovery can change the scope.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Work</th>
+<th>Estimate</th>
+<th>Done when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0. Validate and preflight</td>
+<td>Interview 3–5 teams, get sanitized example questions/docs, confirm infrastructure and provider compatibility</td>
+<td>2–3 days</td>
+<td>One pilot team agrees to trial; supported formats, hosting and success criteria recorded</td>
+</tr>
+<tr>
+<td>1. Workspace foundation</td>
+<td>Additive migrations, roles, invitations, workspace UI and isolation tests</td>
+<td>4–6 days</td>
+<td>Two companies can use the app without accessing each other's records or files</td>
+</tr>
+<tr>
+<td>2. Knowledge pipeline</td>
+<td>Private upload, worker, extraction, versions, embeddings, library UI</td>
+<td>6–8 days</td>
+<td>Supported documents become searchable; failed jobs recover; replacement/deletion are safe</td>
+</tr>
+<tr>
+<td>3. Retrieval and evidence</td>
+<td>Hybrid retrieval, source previews, labeled evaluation set</td>
+<td>4–6 days</td>
+<td>Retrieval meets the initial gate on held-out questions and always enforces workspace scope</td>
+</tr>
+<tr>
+<td>4. Support workflow</td>
+<td>Restricted agent, draft editor, citations, revisions, approve/copy, feedback</td>
+<td>6–9 days</td>
+<td>Staff can complete question → cited draft → edited/copied reply, including no-answer cases</td>
+</tr>
+<tr>
+<td>5. Reliability and cost</td>
+<td>Usage reservations, quotas, idempotency, audits, telemetry, failure recovery</td>
+<td>4–6 days</td>
+<td>Retry/disconnect/rate-limit scenarios are tested without uncontrolled duplicate work</td>
+</tr>
+<tr>
+<td>6. Pilot release</td>
+<td>Full E2E, adversarial evaluation, load test, restore drill, pilot onboarding</td>
+<td>5–7 days</td>
+<td>Quality and operational gates pass; pilot feedback supports wider release</td>
+</tr>
+<tr>
+<td>7. Pilot adjustments</td>
+<td>Fix observed retrieval/UI issues and repeat affected evaluations</td>
+<td>4–6 days</td>
+<td>Pilot target met or a documented decision to narrow/change the product</td>
+</tr>
+</tbody>
+</table>
+<p>Release in reviewable increments: workspace migration/access → workspace UI → ingestion → retrieval → support generation → review UI → quotas/telemetry → pilot release. Include tests with each increment rather than postponing all testing to the end.</p>
+<h2 id="11-test-and-evaluation-plan">11. Test and evaluation plan<a class="headerlink" href="#11-test-and-evaluation-plan" title="Permanent link">&para;</a></h2>
+<p>Keep the existing checks in <code>docs/quality.md</code>. Add:</p>
+<ul>
+<li><strong>Unit tests:</strong> role policy, parser output, chunk provenance, citation validation, draft version conflicts, quota accounting and duplicate jobs.</li>
+<li><strong>Database/<abbr title="Application Programming Interface">API</abbr> integration:</strong> upload-to-retrieval; source replacement and deletion; membership revocation; simultaneous generation requests; worker crash/retry; missing/invalid provider credentials; exhausted quota.</li>
+<li><strong>Isolation:</strong> users from workspace A cannot fetch, search, cite, download, stream, export or mutate B's records, including guessed IDs and stale cached data. Test removed members during active generation and preview requests.</li>
+<li><strong>Browser journeys:</strong> owner uploads and sees ready status; agent gets and edits a cited reply; source preview opens; reload preserves revisions; mobile navigation; unavailable sources; failed generation; empty knowledge; double-click; expired invitation.</li>
+<li><strong>Adversarial cases:</strong> embedded instructions in documents, conflicting policies, fabricated source IDs, copied instructions in customer questions, unsupported refund promises and HTML/script content in uploads or drafts.</li>
+<li><strong>Operational recovery:</strong> Redis/worker outage, repeated task delivery, embedding timeout, database failure, storage failure, source deletion during ingestion, migration on an existing-data copy, backup restore.</li>
+</ul>
+<p>Build an initial set of at least 100 sanitized questions with reviewer-labeled evidence: approximately 60 answerable, 20 unanswerable, 10 ambiguous/conflicting and 10 adversarial. Separate development examples from a held-out release set. Pin dataset, parser, embedding and prompt versions. Human review is required; model grading is supplementary.</p>
+<p>Proposed pilot gates, to confirm in discovery:</p>
+<table>
+<thead>
+<tr>
+<th>Measure</th>
+<th>Initial target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Workspace isolation</td>
+<td>Zero cross-workspace disclosures in the defined test suite</td>
+</tr>
+<tr>
+<td>Citation reference validity</td>
+<td>100% of displayed references resolve to authorized supplied sources or explicitly show unavailable</td>
+</tr>
+<tr>
+<td>Evidence retrieval</td>
+<td>Supporting passage in top 5 results for at least 90% of answerable held-out questions</td>
+</tr>
+<tr>
+<td>Grounded policy/product claims</td>
+<td>At least 95% supported by evidence under human review; zero known critical policy errors</td>
+</tr>
+<tr>
+<td>Missing evidence</td>
+<td>Appropriate clarification/escalation on at least 95% of unanswerable held-out questions</td>
+</tr>
+<tr>
+<td>Draft usefulness</td>
+<td>At least 80% rated usable with minor/no edits by pilot staff</td>
+</tr>
+<tr>
+<td>Business outcome</td>
+<td>At least 30% lower median time to an approved reply versus the team's baseline</td>
+</tr>
+</tbody>
+</table>
+<p>These are targets, not guarantees or current product results. Record sample sizes and individual severe failures, not just averages.</p>
+<h2 id="12-performance-cost-and-operations">12. Performance, cost and operations<a class="headerlink" href="#12-performance-cost-and-operations" title="Permanent link">&para;</a></h2>
+<p>Measure in a production build with a declared test workload: initially 10 concurrent support users, up to 100 documents/50,000 chunks per workspace, typical 300-token questions and replies capped near 600 tokens. These are benchmark assumptions, not sales limits.</p>
+<ul>
+<li>UI pending feedback target: under 100 ms on the target device.</li>
+<li>Ordinary warmed application reads: p95 under 500 ms.</li>
+<li>Retrieval: p95 under 1 second at the declared corpus size.</li>
+<li>Complete validated draft: initial p95 target under 15 seconds, measured separately by model/provider and output length.</li>
+<li>Typical 20-page text document: initial processing target under 2 minutes; show progress and errors when exceeded.</li>
+</ul>
+<p>Record upload/extraction/embedding time, queue age, retrieval time, provider time, first response time, total draft time, error rate and cancellation count. Correlate by request and generation IDs. Do not log keys, raw customer messages or full company documents by default.</p>
+<p>Track actual input/output/embedding tokens, provider-reported cost where available, storage and queue usage. Estimate cost per accepted draft from those measurements using current contracted provider prices at implementation time. Keep estimated and billed amounts distinct. Set hard per-workspace allowances and global concurrency ceilings before the pilot; do not offer unlimited usage.</p>
+<p>Runbooks must cover stuck ingestion, re-indexing, key rotation, provider outages, queue recovery, restore, source deletion and membership removal. Include health checks for database, storage and worker liveness. Configuration presence does not establish provider availability.</p>
+<h2 id="13-deployment-and-rollback">13. Deployment and rollback<a class="headerlink" href="#13-deployment-and-rollback" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Add example configuration for support feature flags, Redis, private storage, embedding provider/model/dimension, upload limits and generation limits. Do not add real keys to Git.</li>
+<li>Deploy additive migrations, <abbr title="Application Programming Interface">API</abbr> and worker with support disabled. Confirm existing auth/chat/memory still pass smoke tests.</li>
+<li>Enable for an allowlist of pilot workspaces and run end-to-end checks against real embeddings and generation using a bounded test budget.</li>
+<li>Confirm private storage access, secrets management, backups and a successful restore test before real company documents are uploaded.</li>
+<li>Increase pilot access only after quality, isolation and performance gates pass.</li>
+<li>Roll back by disabling support generation/uploads and stopping new job dispatch; retain data and existing app features. Avoid destructive migration downgrades as an automatic rollback. Record how in-flight work is drained or cancelled.</li>
+</ol>
+<p>Billing and public self-service signup expansion follow a successful pilot. Before accepting paid subscriptions, add subscription lifecycle, entitlements, payment failure handling and verified usage enforcement as a separate release.</p>
+<h2 id="14-decisions-to-settle-during-phase-0">14. Decisions to settle during phase 0<a class="headerlink" href="#14-decisions-to-settle-during-phase-0" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Which support teams will pilot it, and what documents/questions can they share safely?</li>
+<li>Is the English-first, text-document scope sufficient? If Arabic or scanned PDFs are required, revise parsing, evaluation and estimates before proceeding.</li>
+<li>Where will company data be hosted, and what deletion/retention expectations apply?</li>
+<li>Which generation and embedding providers are available with an approved trial budget?</li>
+<li>Is shared knowledge within each workspace acceptable, or are document-level restrictions necessary?</li>
+<li>What is the current time per reply, and what improvement would justify paying for the product?</li>
+</ul>
+<p>Recommended first implementation milestone after validation: two isolated workspaces can upload a document, search only their own content and open the exact source passage. Build and verify this before adding polished <abbr title="Artificial Intelligence">AI</abbr> reply generation.</p>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/vstorm-co/full-stack-ai-agent-template" target="_blank" rel="noopener" title="GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://pypi.org/project/fastapi-fullstack/" target="_blank" rel="noopener" title="PyPI" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6M286.2 444.7a20.4 20.4 0 1 1 0-40.7 20.4 20.4 0 1 1 0 40.7M167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4m-6.6-183.4a20.4 20.4 0 1 1 0 40.8 20.4 20.4 0 1 1 0-40.8"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.prefetch", "navigation.instant.progress", "navigation.tracking", "navigation.path", "navigation.top", "navigation.footer", "navigation.indexes", "search.suggest", "search.highlight", "search.share", "content.tabs.link", "content.code.copy", "content.code.select", "content.code.annotate", "content.tooltips", "toc.follow", "announce.dismiss"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
