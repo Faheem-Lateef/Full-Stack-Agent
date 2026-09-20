@@ -27,7 +27,7 @@ SUPPORT_EMBEDDINGS_ENABLED=false
 SUPPORT_EMBEDDING_MODEL=text-embedding-3-small
 ```
 
-Do not put real keys in tracked files or frontend configuration. Restart both API and worker after changes. The local installation currently enables support and keyword search; no OpenAI key has been supplied and paid AI verification is deferred at the user's request.
+Do not put real keys in tracked files or frontend configuration. Restart both API and worker after changes. The local installation enables support and keyword search. On 2026-09-20 the operator authorized live testing and supplied a key, which was stored only in the ignored backend `.env`. OpenAI returned `429 credit_balance_exhausted` (`insufficient_quota`); successful generation and semantic verification remain blocked by account credits. See the [functional review](../reports/product-review-2026-09-20.md).
 
 To enable semantic search later, configure a valid OpenAI key, set `SUPPORT_EMBEDDINGS_ENABLED=true`, restart, and replace/reprocess the existing documents. Existing keyword-only documents are not silently embedded. Index and query vectors must use the same model. Changing the model requires reindexing; keep semantic mode disabled until that migration is complete. Indexing and searching in semantic mode can incur embedding charges.
 
@@ -95,4 +95,4 @@ This command measures keyword evidence hits at five and makes no model/embedding
 
 ## Before a public release
 
-Finish customer discovery and the held-out evidence/answer-quality evaluation. Add deployment-specific private object storage, sandboxed/malware-scanned parsing, worker supervision and health alerts, provider usage reconciliation, retention/anonymization rules, backup/restore verification, and a measured load test. Review public account bootstrap and rate limiting. Keep live AI testing pending until the operator authorizes it. The current work is a local functional pilot, not a completed production rollout.
+Finish customer discovery and the held-out evidence/answer-quality evaluation. Add deployment-specific private object storage, sandboxed/malware-scanned parsing, worker supervision and health alerts, provider usage reconciliation, retention/anonymization rules, backup/restore verification, and a measured load test. Review public account bootstrap and rate limiting. Live testing is authorized, but currently blocked by exhausted API credits. Resolve the findings in the functional review before a public release. The current work is a local functional pilot, not a completed production rollout.
