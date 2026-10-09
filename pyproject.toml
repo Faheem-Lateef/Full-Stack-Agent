@@ -50,7 +50,7 @@ dependencies = [
     "click>=8.3.3",
     "cookiecutter>=2.7.0",
     "pyyaml>=6.0",
-    "packaging>=24.0",
+    "packaging>=26.3",
     # Shelled out to by the post-gen hook to format the rendered project.
     "ruff>=0.14.0",
     "rich>=15.0.0",
