@@ -47,15 +47,15 @@ classifiers = [
 # belongs in template/{{cookiecutter.project_slug}}/backend/pyproject.toml â€”
 # declaring it here makes every `uvx fastapi-fullstack` install it too.
 dependencies = [
-    "click>=8.3.3",
-    "cookiecutter>=2.7.0",
+    "click>=8.5.0",
+    "cookiecutter>=2.7.1",
     "pyyaml>=6.0",
     "packaging>=24.0",
     # Shelled out to by the post-gen hook to format the rendered project.
     "ruff>=0.14.0",
     "rich>=15.0.0",
-    "questionary>=2.1.0",
-    "pydantic>=2.13.0",
+    "questionary>=2.1.1",
+    "pydantic>=2.13.5",
     # Required at runtime by pydantic's EmailStr (ProjectConfig.author_email).
     "email-validator>=2.3.0",
 ]
@@ -69,7 +69,7 @@ dev = [
     "pre-commit>=4.0.0",
     # Imported by tests that exercise generated projects, not by fastapi_gen.
     "httpx>=0.28.1",
-    "pydantic-settings>=2.14.2",
+    "pydantic-settings>=2.15.0",
     "celery>=5.6.3",
     "taskiq>=0.12.4",
     "arq>=0.28.0",
