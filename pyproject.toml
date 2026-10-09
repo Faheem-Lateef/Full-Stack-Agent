@@ -49,7 +49,7 @@ classifiers = [
 dependencies = [
     "click>=8.3.3",
     "cookiecutter>=2.7.0",
-    "pyyaml>=6.0",
+    "pyyaml>=6.0.3",
     "packaging>=24.0",
     # Shelled out to by the post-gen hook to format the rendered project.
     "ruff>=0.14.0",
